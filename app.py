@@ -1,4 +1,4 @@
-"""TestingStudio Web: first-sprint TXT analysis interface."""
+"""TestingStudio Web: documentação e análise de testes sobre arquivos TXT."""
 
 import hashlib
 from pathlib import Path
@@ -10,10 +10,23 @@ from aplicacao.documentation import build_documentation
 from aplicacao.file_reader import read_text
 from aplicacao.gemini_client import GeminiClient, GeminiError
 from aplicacao.models import CodeExplanation, Finding
+from aplicacao.exportacao_pdf import analysis_sections, explanation_sections
+from aplicacao.interface_relatorios import pdf_actions
+from aplicacao.interface_testes import flow_view, functional_view
+from aplicacao.interface_requisitos import requirements_view
 from aplicacao.validators import MAX_FILE_BYTES, UploadValidationError, validate_upload
 
 
 PREVIEW_CHARS = 12_000
+
+
+def clear_results() -> None:
+    for key in ("documentation_result", "explanation_result", "functional_result", "flow_result",
+                "requirements_result", "requirements_reviewed", "requirements_revision"):
+        st.session_state.pop(key, None)
+    for key in list(st.session_state):
+        if key.startswith("pdf_"):
+            st.session_state.pop(key, None)
 
 
 def show_findings(title: str, findings: list[Finding]) -> None:
@@ -58,9 +71,10 @@ def show_documentation(filename: str) -> None:
         file_name=f"documentacao_{Path(filename).stem}.md",
         mime="text/markdown",
     )
+    pdf_actions("Documentação do arquivo", filename, analysis_sections(result), "documentacao")
 
 
-def show_explanation() -> None:
+def show_explanation(filename: str) -> None:
     result: CodeExplanation | None = st.session_state.get("explanation_result")
     if result is None:
         return
@@ -76,6 +90,7 @@ def show_explanation() -> None:
         st.subheader("O que o TXT não mostra")
         for item in result.unknowns:
             st.write(f"• {item}")
+    pdf_actions("Como o código funciona", filename, explanation_sections(result), "explicacao")
 
 
 def main() -> None:
@@ -100,12 +115,12 @@ def main() -> None:
         """,
         unsafe_allow_html=True,
     )
-    st.caption("TESTINGSTUDIO WEB  /  SPRINT 1")
+    st.caption("TESTINGSTUDIO WEB  /  SPRINTS 1, 2 E 3")
     st.title("Entenda o que há no seu TXT")
-    st.write("Envie um TXT para gerar documentação ou entender como o código funciona.")
+    st.write("Documente o código, entenda seu funcionamento e prepare testes a partir de um TXT.")
     st.info(
-        "A análise é estática: o arquivo não será executado. Ao gerar o resultado, "
-        "seu conteúdo será enviado à API Gemini."
+        "O código do TXT não será executado. Documentação, explicação e derivação de requisitos usam a API Gemini. "
+        "PCE/AVL e fluxo de controle são calculados localmente."
     )
 
     uploaded = st.file_uploader(
@@ -114,8 +129,7 @@ def main() -> None:
         help="UTF-8, até 1 MB. O arquivo permanece apenas nesta sessão.",
     )
     if uploaded is None:
-        st.session_state.pop("documentation_result", None)
-        st.session_state.pop("explanation_result", None)
+        clear_results()
         st.session_state.pop("analysis_digest", None)
         st.caption("Selecione um .txt para começar.")
         return
@@ -125,8 +139,7 @@ def main() -> None:
         validate_upload(uploaded.name, data)
         content = read_text(data)
     except (UploadValidationError, OSError) as exc:
-        st.session_state.pop("documentation_result", None)
-        st.session_state.pop("explanation_result", None)
+        clear_results()
         if isinstance(exc, UploadValidationError):
             st.error(str(exc))
         else:
@@ -135,8 +148,7 @@ def main() -> None:
 
     digest = hashlib.sha256(data).hexdigest()
     if st.session_state.get("analysis_digest") != digest:
-        st.session_state.pop("documentation_result", None)
-        st.session_state.pop("explanation_result", None)
+        clear_results()
     st.session_state["analysis_digest"] = digest
 
     st.caption(f"{uploaded.name} · {len(data):,} bytes · limite {MAX_FILE_BYTES:,} bytes")
@@ -147,13 +159,22 @@ def main() -> None:
 
     mode = st.radio(
         "O que deseja fazer?",
-        ("Documentação", "Explicar o código"),
+        ("Documentação", "Explicar o código", "PCE / AVL", "Fluxo de controle", "Requisitos e RTM"),
         horizontal=True,
         help="Cada opção gera um resultado próprio para o mesmo arquivo.",
     )
+    if mode == "PCE / AVL":
+        functional_view(content, uploaded.name, digest[:12])
+        return
+    if mode == "Fluxo de controle":
+        flow_view(content, uploaded.name)
+        return
+    if mode == "Requisitos e RTM":
+        requirements_view(content, uploaded.name, digest[:12])
+        return
     result_key = "documentation_result" if mode == "Documentação" else "explanation_result"
     action = "Gerar documentação" if mode == "Documentação" else "Explicar código"
-    if st.button(action, type="primary", use_container_width=True):
+    if st.button(action, type="primary", width="stretch"):
         st.session_state.pop(result_key, None)
         with st.spinner("Lendo e interpretando o TXT…"):
             try:
@@ -168,7 +189,7 @@ def main() -> None:
     if mode == "Documentação":
         show_documentation(uploaded.name)
     else:
-        show_explanation()
+        show_explanation(uploaded.name)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,19 @@
+Sistema de Biblioteca Universitária - exemplo didático da aula de 14/10/2026
+
+REQ01: Cadastro de novos livros informando ISBN, Título e Autor.
+REQ02: Validação de pendências financeiras do usuário antes de liberar o empréstimo.
+REQ03: Cálculo automático da multa de R$ 2,00 por dia de atraso na devolução.
+REQ04: Busca de livros por título ou categoria.
+REQ05: Emissão de comprovante digital de reserva por e-mail.
+
+Casos ilustrativos de teste apresentados na aula:
+CT01 - Caminho feliz: cadastro seguido de busca e emissão de comprovante de reserva.
+Requisitos relacionados: REQ01, REQ04 e REQ05.
+CT02 - Exceção/bloqueio: simulação de usuário com dívida para garantir que o sistema barre o empréstimo.
+Requisito relacionado: REQ02.
+CT03 - Limite/multa: teste de valores fronteiriços para validar o cálculo exato da multa de R$ 2,00 ao dia.
+Requisito relacionado: REQ03.
+
+As regras de validade do ISBN, o ator responsável pelo cadastro e os detalhes de
+arredondamento/contagem dos dias de atraso não foram definidos neste exemplo.
+Esses pontos precisam de confirmação antes de detalhar os testes correspondentes.
