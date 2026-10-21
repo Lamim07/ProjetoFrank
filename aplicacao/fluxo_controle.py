@@ -102,7 +102,7 @@ def _tokens(lines: list[tuple[int, str]]) -> list[Statement]:
     return tokens
 
 
-def _parse(tokens: list[Statement]) -> list[Statement]:
+def _parse(tokens: list[Statement], group_blocks: bool = True) -> list[Statement]:
     index = 0
 
     def sequence(stops: set[str]) -> list[Statement]:
@@ -123,6 +123,8 @@ def _parse(tokens: list[Statement]) -> list[Statement]:
                 pending.append(current)
                 if current.kind == "return":
                     flush(True)
+                elif not group_blocks:
+                    flush()
                 continue
             flush()
             if current.kind == "if":

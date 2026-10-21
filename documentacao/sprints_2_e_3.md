@@ -1,5 +1,10 @@
 # Entrega das sprints 2 e 3
 
+Registro histórico com numeração anterior. A classificação oficial atual é Sprint 1
+Caixa Preta e Sprint 2 Caixa Branca para os recursos descritos neste arquivo.
+Fluxo de Dados/Mutantes é a Sprint 3; Pitch/Validação é a Sprint 4.
+Consulte [os critérios atuais](sprints_e_validacao.md).
+
 Escopo: Sprint 2 com PCE/AVL, ε e casos; Sprint 3 com grafo e V(G).
 Exportação em PDF nos quatro tipos de resultado.
 
@@ -41,4 +46,5 @@ O PDF acompanha esse resultado, não os rascunhos do formulário.
 O código e o SQL recebidos não são executados. A fórmula é um modelo aritmético;
 os casos ainda precisam ser executados pelo responsável contra o sistema real.
 O grafo modela o subconjunto 4GL descrito no README. A métrica é por função,
-sem expansão de chamadas ou exceções implícitas. Não há mutação nem pares Def-Uso.
+sem expansão de chamadas ou exceções implícitas. Mutação e pares Def-Uso foram entregues
+posteriormente no [módulo avançado](modulo_avancado.md), com seus próprios limites.

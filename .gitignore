@@ -7,3 +7,6 @@ __pycache__/
 !.env.example
 .streamlit/secrets.toml
 *.log
+evidencias/
+test-results/
+playwright-report/

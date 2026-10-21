@@ -14,6 +14,7 @@ from aplicacao.exportacao_pdf import analysis_sections, explanation_sections
 from aplicacao.interface_relatorios import pdf_actions
 from aplicacao.interface_testes import flow_view, functional_view
 from aplicacao.interface_requisitos import requirements_view
+from aplicacao.interface_avancada import data_flow_view, mutation_view
 from aplicacao.validators import MAX_FILE_BYTES, UploadValidationError, validate_upload
 
 
@@ -22,7 +23,8 @@ PREVIEW_CHARS = 12_000
 
 def clear_results() -> None:
     for key in ("documentation_result", "explanation_result", "functional_result", "flow_result",
-                "requirements_result", "requirements_reviewed", "requirements_revision"):
+                "requirements_result", "requirements_reviewed", "requirements_revision",
+                "data_flow_result", "mutation_catalog", "mutation_registry", "mutation_revision", "mutation_model_result", "source_mutation_result"):
         st.session_state.pop(key, None)
     for key in list(st.session_state):
         if key.startswith("pdf_"):
@@ -115,12 +117,12 @@ def main() -> None:
         """,
         unsafe_allow_html=True,
     )
-    st.caption("TESTINGSTUDIO WEB  /  SPRINTS 1, 2 E 3")
+    st.caption("TESTINGSTUDIO WEB  /  TESTES FUNCIONAIS, ESTRUTURAIS E AVANÇADOS")
     st.title("Entenda o que há no seu TXT")
     st.write("Documente o código, entenda seu funcionamento e prepare testes a partir de um TXT.")
     st.info(
         "O código do TXT não será executado. Documentação, explicação e derivação de requisitos usam a API Gemini. "
-        "PCE/AVL e fluxo de controle são calculados localmente."
+        "PCE/AVL, fluxo de controle, Def-Uso e mutação são processados localmente."
     )
 
     uploaded = st.file_uploader(
@@ -159,10 +161,16 @@ def main() -> None:
 
     mode = st.radio(
         "O que deseja fazer?",
-        ("Documentação", "Explicar o código", "PCE / AVL", "Fluxo de controle", "Requisitos e RTM"),
+        ("Documentação", "Explicar o código", "PCE / AVL", "Fluxo de controle", "Requisitos e RTM", "Pares Def-Uso", "Mutação"),
         horizontal=True,
         help="Cada opção gera um resultado próprio para o mesmo arquivo.",
     )
+    sprint = {"PCE / AVL": "Sprint 1 - Testes de Caixa Preta",
+              "Fluxo de controle": "Sprint 2 - Testes de Caixa Branca",
+              "Pares Def-Uso": "Sprint 3 - Fluxo de Dados e Mutantes",
+              "Mutação": "Sprint 3 - Fluxo de Dados e Mutantes"}.get(mode)
+    if sprint:
+        st.caption(sprint)
     if mode == "PCE / AVL":
         functional_view(content, uploaded.name, digest[:12])
         return
@@ -171,6 +179,12 @@ def main() -> None:
         return
     if mode == "Requisitos e RTM":
         requirements_view(content, uploaded.name, digest[:12])
+        return
+    if mode == "Pares Def-Uso":
+        data_flow_view(content, uploaded.name)
+        return
+    if mode == "Mutação":
+        mutation_view(content, uploaded.name, digest[:12])
         return
     result_key = "documentation_result" if mode == "Documentação" else "explanation_result"
     action = "Gerar documentação" if mode == "Documentação" else "Explicar código"

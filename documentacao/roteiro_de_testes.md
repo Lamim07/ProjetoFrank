@@ -10,7 +10,12 @@
 6. Selecionar **Explicar o código**: mostrar fluxo em etapas, entradas e saídas, cálculos,
    operações e lacunas, com evidência literal do TXT.
 7. Alternar entre as opções: preservar o resultado já gerado de cada uma.
-8. Trocar o arquivo após uma análise: apagar os dois resultados anteriores.
+8. Trocar o conteúdo do arquivo após uma análise: apagar todos os resultados e PDFs anteriores.
+
+## Módulo avançado
+
+O roteiro de Def-Uso, mutação, escore, evidências e relatórios está em
+[modulo_avancado.md](modulo_avancado.md).
 
 ## Conteúdo esperado no TXT
 

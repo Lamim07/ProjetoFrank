@@ -1,0 +1,80 @@
+{
+  "python": "3.14.7",
+  "playwright": "1.64.0",
+  "navegador": "156.0.8078.4",
+  "gemini": "Simulado nos cenários de sucesso E2E; sem chave no servidor de produção de teste.",
+  "cenarios": [
+    {
+      "cenario": "test_01_upload_errors_and_missing_key",
+      "situacao": "passou",
+      "segundos": 5.85,
+      "captura": "test_01_upload_errors_and_missing_key.png"
+    },
+    {
+      "cenario": "test_02_sprint1_black_box",
+      "situacao": "passou",
+      "segundos": 7.45,
+      "captura": "test_02_sprint1_black_box.png"
+    },
+    {
+      "cenario": "test_03_sprint2_white_box",
+      "situacao": "passou",
+      "segundos": 6.37,
+      "captura": "test_03_sprint2_white_box.png"
+    },
+    {
+      "cenario": "test_04_sprint3_data_flow",
+      "situacao": "passou",
+      "segundos": 4.61,
+      "captura": "test_04_sprint3_data_flow.png"
+    },
+    {
+      "cenario": "test_05_sprint3_mutant_catalog",
+      "situacao": "passou",
+      "segundos": 4.23,
+      "captura": "test_05_sprint3_mutant_catalog.png"
+    },
+    {
+      "cenario": "test_06_sprint3_source_mutation",
+      "situacao": "passou",
+      "segundos": 5.17,
+      "captura": "test_06_sprint3_source_mutation.png"
+    },
+    {
+      "cenario": "test_07_arithmetic_experiment",
+      "situacao": "passou",
+      "segundos": 4.91,
+      "captura": "test_07_arithmetic_experiment.png"
+    },
+    {
+      "cenario": "test_08_documentation_and_explanation_simulated",
+      "situacao": "passou",
+      "segundos": 7.29,
+      "captura": "test_08_documentation_and_explanation_simulated.png"
+    },
+    {
+      "cenario": "test_09_requirements_review_and_rtm_simulated",
+      "situacao": "passou",
+      "segundos": 5.97,
+      "captura": "test_09_requirements_review_and_rtm_simulated.png"
+    },
+    {
+      "cenario": "test_10_service_failure_simulated",
+      "situacao": "passou",
+      "segundos": 2.29,
+      "captura": "test_10_service_failure_simulated.png"
+    },
+    {
+      "cenario": "test_11_session_isolation_and_changed_file",
+      "situacao": "passou",
+      "segundos": 5.95,
+      "captura": "test_11_session_isolation_and_changed_file.png"
+    },
+    {
+      "cenario": "test_12_mobile_layout",
+      "situacao": "passou",
+      "segundos": 2.27,
+      "captura": "test_12_mobile_layout.png"
+    }
+  ]
+}
